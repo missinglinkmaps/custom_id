@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+        <meta charset='utf-8'>
+        <title>iD</title>
+        <link rel='stylesheet' href='iD.css'>
+
+        <!-- mobile devices -->
+        <meta name='viewport' content='initial-scale=1.0 maximum-scale=1.0'>
+        <meta name='apple-mobile-web-app-capable' content='yes' />
+        <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />
+
+        <!--[if !IE]>-->
+        <script src='iD.js'></script>
+        <script src='presets.js'></script>
+        <script src='imagery.js'></script>
+        <!--<![endif]-->
+    </head>
+    <body>
+        <div id='id-container'></div>
+        <script>
+            imagery=[{
+                  "name": "SNF Trails and Campsites",
+                  "type": "tms",
+                  "description": "Satellite and aerial imagery.",
+                  "template": "http://api.tiles.mapbox.com/v4/dbspatial.l61gka71/{zoom}/{x}/{y}.png?access_token=pk.eyJ1IjoiZGJzcGF0aWFsIiwiYSI6IkRlbmZrOVEifQ.sbFFb6cfs8YWKDBeWRX4sw",
+                  "scaleExtent": [
+                      0,
+                      22
+                  ],
+                  "terms_url": "http://www.mapbox.com/about/maps/",
+                  "terms_text": "Terms & Feedback",
+                  "id": "SNF",
+                  "default": true
+              }];
+            Array.prototype.push.apply(imagery,iD.data.imagery);
+            //portage_preset={"geometry":["line"],"fields":"source","tags":{"highway":"footway"},"name":"Portage"};
+            //iD.data.presets.presets['portage']=portage_preset;
+            bwcaw_portage={
+              "geometry": ["line"],
+              "fields": ["source"],
+              "tags": { "highway":"footway","portage": "yes", "sport":"canoe" },
+              "name": "BWCAW Portage"
+            };
+            iD.data.presets.presets['bwcaw_portage']=bwcaw_portage;
+            bwcaw_campsite={
+              "geometry": ["point"],
+              "fields": ["source"],
+              "tags": { "tourism":"campsite","backcountry": "yes", "tents":"yes", "openfire":"yes", "maxtents":"*", "leisure":"firepit", "ammenity":"toilets", "toilets:disposal":"pitlatrine" },
+              "name": "BWCAW Campsite"
+            };
+            iD.data.presets.presets['bwcaw_campsite']=bwcaw_campsite;
+            if (typeof iD == 'undefined') {
+                document.getElementById('id-container').innerHTML = 'Sorry, Internet Explorer is not currently supported. Please use Potlatch 2 to edit the map.';
+                document.getElementById('id-container').className = 'unsupported';
+            } else {
+                var id = iD()
+                  .presets(iD.data.presets)
+                  .imagery(imagery)
+                  .taginfo(iD.taginfo());
+
+                d3.select('#id-container')
+                    .call(id.ui());
+            }
+        </script>
+    </body>
+</html>
