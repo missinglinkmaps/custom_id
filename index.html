@@ -20,6 +20,41 @@
     <body>
         <div id='id-container'></div>
         <script>
+        console.log('initial hash',typeof window.location.hash,window.location.hash);
+        if (typeof window.location.hash == 'undefined' || window.location.hash=='') {
+          console.log(window.location.hash);
+          window.location.hash='background=SNF&map=10/-91.5/47.9';
+          console.log(window.location.hash);
+        }
+            defaults={
+              "area": [
+                  "category-landuse",
+                  "category-water-area",
+                  "area"
+              ],
+              "line": [
+                  "bwcaw_portage",
+                  "category-path",
+                  "category-road",
+                  "category-water-line",
+                  "line"
+              ],
+              "point": [
+                  "bwcaw_campsite",
+                  "point"
+              ],
+              "vertex": [
+                  "vertex"
+              ],
+              "relation": [
+                  "category-route",
+                  "category-restriction",
+                  "type/boundary",
+                  "type/multipolygon",
+                  "relation"
+              ]
+            };
+            iD.data.presets.defaults=defaults;
             imagery=[{
                   "name": "SNF Trails and Campsites",
                   "type": "tms",
@@ -47,7 +82,7 @@
             bwcaw_campsite={
               "geometry": ["point"],
               "fields": ["source"],
-              "tags": { "tourism":"campsite","backcountry": "yes", "tents":"yes", "openfire":"yes", "maxtents":"*", "leisure":"firepit", "ammenity":"toilets", "toilets:disposal":"pitlatrine" },
+              "tags": { "tourism":"camp_site","backcountry": "yes", "tents":"yes", "openfire":"yes", "maxtents":"*", "leisure":"firepit", "amenity":"toilets", "toilets:disposal":"pitlatrine" },
               "name": "BWCAW Campsite"
             };
             iD.data.presets.presets['bwcaw_campsite']=bwcaw_campsite;
@@ -58,7 +93,8 @@
                 var id = iD()
                   .presets(iD.data.presets)
                   .imagery(imagery)
-                  .taginfo(iD.taginfo());
+                  .taginfo(iD.taginfo())
+                  .minEditableZoom(14);
 
                 d3.select('#id-container')
                     .call(id.ui());
